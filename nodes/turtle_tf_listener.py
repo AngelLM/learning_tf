@@ -24,7 +24,7 @@ if __name__ == '__main__':
     while not rospy.is_shutdown():
         try:
             now = rospy.Time.now() 
-            past = now - rospy.Duration(5.0)
+            past = now - rospy.Duration(0.3)
             listener.waitForTransformFull("/turtle2", now,
                                     "/turtle1", past,
                                     "/world", rospy.Duration(1.0))
@@ -35,10 +35,16 @@ if __name__ == '__main__':
             continue
 
         angular = 4 * math.atan2(trans[1], trans[0])
-        linear = 0.5 * math.sqrt(trans[0] ** 2 + trans[1] ** 2)
+        #linear = 0.5 * math.sqrt(trans[0] ** 2 + trans[1] ** 2)
+        linear = 2
+        distance = math.sqrt(trans[0] ** 2 + trans[1] ** 2)
         cmd = geometry_msgs.msg.Twist()
-        cmd.linear.x = linear
-        cmd.angular.z = angular
+        if distance < 1 and distance > 0.2:
+            cmd.linear.x = linear
+            cmd.angular.z = angular
+        else:
+            cmd.linear.x = 0
+            cmd.angular.z = 0
         turtle_vel.publish(cmd)
 
         rate.sleep()
