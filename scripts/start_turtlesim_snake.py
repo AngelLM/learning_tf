@@ -6,14 +6,14 @@ import math
 import tf
 import geometry_msgs.msg
 import turtlesim.srv
-from std_srvs.srv import Empty
+from learning_tf.srv import *
 
-def handle_turtlesim_snake(Empty):
+def handle_turtlesim_snake(req):
     listener = tf.TransformListener()
 
     rospy.wait_for_service('spawn')
     spawner = rospy.ServiceProxy('spawn', turtlesim.srv.Spawn)
-    spawner(4, 2, 0, 'turtle2')
+    spawner(req.x, req.y, req.z, 'turtle2')
 
     turtle_vel = rospy.Publisher('turtle2/cmd_vel', geometry_msgs.msg.Twist,queue_size=1)
 
@@ -59,6 +59,6 @@ def handle_turtlesim_snake(Empty):
 if __name__ == '__main__':
     rospy.init_node("start_turtlesim_snake_server")
     rospy.loginfo("Turtlesim Snake server node created")
-    service = rospy.Service("/start_turtlesim_snake", Empty, handle_turtlesim_snake)
+    service = rospy.Service("/start_turtlesim_snake", turtle_snake, handle_turtlesim_snake)
     rospy.loginfo("Service server has been started")
     rospy.spin()

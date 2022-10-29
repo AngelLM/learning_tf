@@ -6,6 +6,7 @@ import math
 import tf
 import geometry_msgs.msg
 import turtlesim.srv
+import turtle_snake.srv
 
 if __name__ == '__main__':
     rospy.init_node('turtle_tf_listener')
