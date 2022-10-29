@@ -20,11 +20,13 @@ if __name__ == '__main__':
 
     rate = rospy.Rate(10.0)
 
+    following = False
+
     #listener.waitForTransform("/turtle2", "/turtle1", rospy.Time(), rospy.Duration(4.0))
     while not rospy.is_shutdown():
         try:
             now = rospy.Time.now() 
-            past = now - rospy.Duration(0.3)
+            past = now #- rospy.Duration(0)
             listener.waitForTransformFull("/turtle2", now,
                                     "/turtle1", past,
                                     "/world", rospy.Duration(1.0))
@@ -35,16 +37,21 @@ if __name__ == '__main__':
             continue
 
         angular = 4 * math.atan2(trans[1], trans[0])
-        #linear = 0.5 * math.sqrt(trans[0] ** 2 + trans[1] ** 2)
-        linear = 2
+        linear = 2 #0.5 * math.sqrt(trans[0] ** 2 + trans[1] ** 2)
         distance = math.sqrt(trans[0] ** 2 + trans[1] ** 2)
         cmd = geometry_msgs.msg.Twist()
-        if distance < 1 and distance > 0.2:
+        
+        # Let's check if the main turtle is near enough to follow
+        if not following and distance < 1:
+            following = True
+
+        if following and distance >= 1:
             cmd.linear.x = linear
             cmd.angular.z = angular
         else:
             cmd.linear.x = 0
             cmd.angular.z = 0
+
         turtle_vel.publish(cmd)
 
         rate.sleep()
