@@ -6,18 +6,18 @@ import math
 import tf
 import geometry_msgs.msg
 import turtlesim.srv
-import turtle_snake.srv
 
 if __name__ == '__main__':
-    rospy.init_node('turtle_tf_listener')
+    rospy.init_node('turtle_tf_listener', anonymous=True)
+    turtlename = rospy.get_param('~turtlename')
 
     listener = tf.TransformListener()
 
     rospy.wait_for_service('spawn')
     spawner = rospy.ServiceProxy('spawn', turtlesim.srv.Spawn)
-    spawner(4, 2, 0, 'turtle2')
+    spawner(4, 2, 0, turtlename)
 
-    turtle_vel = rospy.Publisher('turtle2/cmd_vel', geometry_msgs.msg.Twist,queue_size=1)
+    turtle_vel = rospy.Publisher('%s/cmd_vel' %turtlename, geometry_msgs.msg.Twist,queue_size=1)
 
     rate = rospy.Rate(10.0)
 
@@ -28,10 +28,10 @@ if __name__ == '__main__':
         try:
             now = rospy.Time.now() 
             past = now #- rospy.Duration(0)
-            listener.waitForTransformFull("/turtle2", now,
+            listener.waitForTransformFull("/%s" %turtlename, now,
                                     "/turtle1", past,
                                     "/world", rospy.Duration(1.0))
-            (trans,rot) = listener.lookupTransformFull("/turtle2", now,
+            (trans,rot) = listener.lookupTransformFull("/%s" % turtlename, now,
                                                     "/turtle1", past,
                                                     "/world")
         except (tf.Exception, tf.LookupException, tf.ConnectivityException):
