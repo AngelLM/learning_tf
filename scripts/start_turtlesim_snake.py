@@ -6,8 +6,20 @@ import rospy
 import roslaunch
 import random
 
+import turtlesim.srv
 from std_srvs.srv import Empty
 from learning_tf.srv import turtle_snake
+
+def disable_pen(turtle):
+    r=0
+    g=0
+    b=0
+    width=0
+    off=1
+    rospy.wait_for_service('/%s/set_pen' % turtle)
+    setpen = rospy.ServiceProxy('/%s/set_pen' % turtle, turtlesim.srv.SetPen)
+    setpen(r,g,b,width,off)
+
 
 def handle_turtlesim_snake(req):
 
@@ -20,7 +32,8 @@ def handle_turtlesim_snake(req):
     rospy.wait_for_service('spawn_snake_turtle')
     spawnSnakeTurtle = rospy.ServiceProxy('spawn_snake_turtle', turtle_snake)
     spawnSnakeTurtle(x, y, theta, turtlename, turtletarget)
-
+    disable_pen(turtletarget)
+    disable_pen(turtlename)
 if __name__ == '__main__':
     rospy.init_node("start_turtlesim_snake_server")
     rospy.loginfo("Turtlesim Snake server node created")

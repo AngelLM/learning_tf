@@ -17,6 +17,9 @@ ros.on('close', function() {
 });
 
 
+var controlsDisabled=true;
+
+
 // Subscribing to the Current Level Topic
 // ----------------------
 var listener = new ROSLIB.Topic({
@@ -26,6 +29,11 @@ var listener = new ROSLIB.Topic({
 });
 
 listener.subscribe(function(message) {
+  if(message.data=="GAME OVER")
+    controlsDisabled=true;
+  else
+    controlsDisabled=false;
+
   document.getElementById("level").innerHTML = message.data;
   /*document.getElementById("level").style.animation-play-state = "paused";
   document.getElementById("level").style.opacity = "1";*/
@@ -69,7 +77,7 @@ function moveForwards(){
       z : 0.0
     }
   });
-  cmdVel.publish(twist);
+  if (!controlsDisabled) cmdVel.publish(twist);
 }
 
 function moveBackwards(){
@@ -91,7 +99,7 @@ function moveBackwards(){
       z : 0.0
     }
   });
-  cmdVel.publish(twist);
+  if (!controlsDisabled) cmdVel.publish(twist);
 }
 
 function turnLeft(){
@@ -113,7 +121,7 @@ function turnLeft(){
       z : 1.0
     }
   });
-  cmdVel.publish(twist);
+  if (!controlsDisabled) cmdVel.publish(twist);
 }
 
 function turnRight(){
@@ -135,7 +143,7 @@ function turnRight(){
       z : -1.0
     }
   });
-  cmdVel.publish(twist);
+  if (!controlsDisabled) cmdVel.publish(twist);
 }
 
 
