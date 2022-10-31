@@ -4,28 +4,26 @@ roslib.load_manifest('learning_tf')
 
 import rospy
 import roslaunch
-import os
-import _thread
+import random
 
+from std_srvs.srv import Empty
 from learning_tf.srv import turtle_snake
 
 def handle_turtlesim_snake(req):
-    rospy.loginfo("handler")
-    #package = 'learning_tf'
-    #executable = 'turtle_tf_listener'
-    #node = roslaunch.core.Node(package, executable)
 
-    #launch = roslaunch.scriptapi.ROSLaunch()
-    #launch.start()
+    x = round(random.uniform(0.5,10.5),1)
+    y = round(random.uniform(0.5,10.5),1)
+    theta = 0
+    turtlename = "turtle2"
+    turtletarget = "turtle1"
 
-    _thread.start_new_thread(os.system,('rosrun learning_tf turtle_tf_listener.py _posx:=%s _posy:=%s _theta:=%s _turtlename:=%s _turtletarget:=%s' % (req.x, req.y, req.theta, req.turtlename, req.turtletarget),))
-    _thread.start_new_thread(os.system,('rosrun learning_tf turtle_tf_broadcaster.py _turtle:=%s' % req.turtlename,))
-
-    return True
+    rospy.wait_for_service('spawn_snake_turtle')
+    spawnSnakeTurtle = rospy.ServiceProxy('spawn_snake_turtle', turtle_snake)
+    spawnSnakeTurtle(x, y, theta, turtlename, turtletarget)
 
 if __name__ == '__main__':
     rospy.init_node("start_turtlesim_snake_server")
     rospy.loginfo("Turtlesim Snake server node created")
-    service = rospy.Service("/start_turtlesim_snake", turtle_snake, handle_turtlesim_snake)
+    service = rospy.Service("/start_turtlesim_snake", Empty, handle_turtlesim_snake)
     rospy.loginfo("Service server has been started")
     rospy.spin()

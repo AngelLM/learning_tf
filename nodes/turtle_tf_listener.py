@@ -16,7 +16,7 @@ def changeBgColor():
     rospy.set_param('/sim/background_r', random.randrange(0,255))
     rospy.set_param('/sim/background_g', random.randrange(0,255))
     rospy.set_param('/sim/background_b', random.randrange(0,255))
-    
+
     clearSrv = rospy.ServiceProxy('/clear', Empty)
     resp = clearSrv()
 
@@ -29,8 +29,8 @@ def spawnNewTurtle(i):
     turtletarget = "turtle%s" % str(i)
 
 
-    rospy.wait_for_service('start_turtlesim_snake')
-    spawnSnakeTurtle = rospy.ServiceProxy('start_turtlesim_snake', learning_tf.srv.turtle_snake)
+    rospy.wait_for_service('spawn_snake_turtle')
+    spawnSnakeTurtle = rospy.ServiceProxy('spawn_snake_turtle', learning_tf.srv.turtle_snake)
     spawnSnakeTurtle(x, y, theta, turtlename, turtletarget)
 
 
