@@ -1,3 +1,5 @@
+// Rosbridge Connection Functions
+// ----------------------
 var ros = new ROSLIB.Ros({
   url : 'ws://localhost:9090'
 });
@@ -14,43 +16,27 @@ ros.on('close', function() {
   console.log('Connection to websocket server closed.');
 });
 
-// Publishing a Topic
-// ------------------
 
-var cmdVel = new ROSLIB.Topic({
-  ros : ros,
-  name : '/cmd_vel',
-  messageType : 'geometry_msgs/Twist'
-});
-
-var twist = new ROSLIB.Message({
-  linear : {
-    x : 0.1,
-    y : 0.2,
-    z : 0.3
-  },
-  angular : {
-    x : -0.1,
-    y : -0.2,
-    z : -0.3
-  }
-});
-cmdVel.publish(twist);
-
-// Subscribing to a Topic
+// Subscribing to the Current Level Topic
 // ----------------------
-
 var listener = new ROSLIB.Topic({
   ros : ros,
-  name : '/listener',
+  name : '/currentGameLevel',
   messageType : 'std_msgs/String'
 });
 
 listener.subscribe(function(message) {
+  document.getElementById("level").innerHTML = message.data;
+  /*document.getElementById("level").style.animation-play-state = "paused";
+  document.getElementById("level").style.opacity = "1";*/
   console.log('Received message on ' + listener.name + ': ' + message.data);
-  listener.unsubscribe();
 });
 
+
+
+
+// Calling the /start_turtlesim_snake service
+// ----------------------
 function startSnakeGame(){
   var startGameClient = new ROSLIB.Service({
     ros : ros,
@@ -62,7 +48,8 @@ function startSnakeGame(){
   startGameClient.callService(request);
 }
 
-
+// Publishing the /turtle1/cmd_vel Topic
+// ------------------
 function moveForwards(){
   var cmdVel = new ROSLIB.Topic({
     ros : ros,
@@ -152,40 +139,30 @@ function turnRight(){
 }
 
 
-// Calling a service
-// -----------------
+// Monitoring the arrow keys for turtle movement
+// --------------------------
+document.onkeydown = checkKey;
 
-/*var addTwoIntsClient = new ROSLIB.Service({
-  ros : ros,
-  name : '/add_two_ints',
-  serviceType : 'rospy_tutorials/AddTwoInts'
-});
+function checkKey(e) {
 
-var request = new ROSLIB.ServiceRequest({
-  a : 1,
-  b : 2
-});
+    e = e || window.event;
 
-addTwoIntsClient.callService(request, function(result) {
-  console.log('Result for service call on '
-    + addTwoIntsClient.name
-    + ': '
-    + result.sum);
-});*/
+    if (e.keyCode == '38') {
+        // up arrow
+        moveForwards();
+    }
+    else if (e.keyCode == '40') {
+        // down arrow
+        moveBackwards();
+    }
+    else if (e.keyCode == '37') {
+       // left arrow
+       turnLeft();
+    }
+    else if (e.keyCode == '39') {
+       // right arrow
+       turnRight();
+    }
 
-// Getting and setting a param value
-// ---------------------------------
+}
 
-ros.getParams(function(params) {
-  console.log(params);
-});
-
-var maxVelX = new ROSLIB.Param({
-  ros : ros,
-  name : 'max_vel_y'
-});
-
-maxVelX.set(0.8);
-maxVelX.get(function(value) {
-  console.log('MAX VAL: ' + value);
-});

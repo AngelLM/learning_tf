@@ -5,20 +5,32 @@
 
 <script type="text/javascript" src="http://static.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
 <script type="text/javascript" src="http://static.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+<script type="text/javascript" src ="controller-functions.js"></script>
 
-<script type="text/javascript" src ="controller-functions.js">
-</script>
+<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-  <h1>Simple roslib Example</h1>
-  <p>Check your Web Console for output.</p>
+  <h1>Turtle Snake Game</h1>
+  <h2>Best videogame since Snake3D</h2>
+  <p id="level">PRESS START</p>
 
-  <button id="startGame" type="button" onclick="startSnakeGame()">Start</button> 
-  <button id="left" type="button" onclick="turnLeft()">Left</button> 
-  <button id="right" type="button" onclick="turnRight()">Right</button> 
-  <button id="up" type="button" onclick="moveForwards()">Up</button> 
-  <button id="down" type="button" onclick="moveBackwards()">Down</button>   
+  <div id="controller_div">
+    <div id="arrow_buttons_div">
+      <div id="top_arrow_button_div">
+        <span class='video-game-button' onclick="moveForwards()">▲</span> 
 
+      </div>
+      <div id="mid_arrow_buttons_div">
+        <span class='video-game-button' onclick="turnLeft()">◀</span>
+        <span class='video-game-button' onclick="turnRight()">▶</span> 
+      </div>
+      <div id="bottom_arrow_button_div">
+        <span class='video-game-button' onclick="moveBackwards()">▼</span> 
+
+      </div>
+    </div>
+    <span class='start-btn' onclick="startSnakeGame()">START</span>
+  </div>
 </body>
 </html>

@@ -1,0 +1,106 @@
+@import url('http://fonts.cdnfonts.com/css/press-start-2p');
+
+@font-face {
+  font-family: 'Press Start 2p';
+}
+body {
+  background-color: black;
+  font-size: 30pt;
+  font-family: 'Press Start 2p';
+}
+
+h1{
+	margin-top: 3em;
+	color: lightgray;
+	text-align: center;
+	font-size: 1.2em;
+}
+
+h2{
+	color: lightgray;
+	text-align: center;
+	font-size: 0.5em;
+}
+
+p{
+	margin-top: 3em;
+	color: white;
+	text-align: center;
+	font-size: 1em;
+	animation: fadeinout 1500ms steps(30,end) infinite;
+	animation-play-state: running;
+}
+
+@keyframes fadeinout{
+	0%{opacity: 1;}
+	50%{opacity: 0.5;}
+	100%{opacity: 1;}
+}
+
+#controller_div{
+	margin-top: 4em;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	justify-content: center;
+}
+
+#arrow_buttons_div{
+	display: inline-block;
+	margin-right: 50pt;
+}
+
+/*
+Credits to Daniel Weiner for his button designs
+https://codepen.io/DanielWeiner/pen/naybVd
+*/
+
+.video-game-button {
+	text-shadow: 1px 1px pink, -1px -1px maroon;
+
+	line-height: 1.5em;
+	text-align: center;
+	display: inline-block;
+	width: 1.5em;
+	-webkit-border-radius: .75em;
+	-moz-border-radius: .75em;
+	-o-border-radius: .75em;
+		border-radius: .75em;
+	background-color: red;
+	-webkit-box-shadow:  0 .2em maroon;
+	-moz-box-shadow:  0 .2em maroon;
+	-o-box-shadow:  0 .2em maroon;
+	box-shadow:  0 .2em maroon;
+	color: red;
+	margin: 5px;
+	background-color: red;
+	background-image: -o-linear-gradient(left top, pink 3%, red 22%, maroon 99%);
+	background-image: -moz-linear-gradient(left top, pink 3%, red 22%, maroon 99%);
+	background-image: -webkit-linear-gradient(left top, pink 3%, red 22%, maroon 99%);
+	background-image: linear-gradient(left top, pink 3%, red 22%, maroon 99%);
+	cursor: pointer;
+  padding-left: 5px;
+}
+.start-btn{
+    text-align: center;
+	display: inline-block;
+	margin:5px;
+    font-weight: bold;
+    padding: 10px 0 10px 10px ;
+    background-color: lightgray;
+    text-shadow: -1px -1px black, 1px 1px white;
+    color: gray;
+    -webkit-border-radius: 7px;
+	-moz-border-radius: 7px;
+	-o-border-radius: 7px;
+	border-radius: 7px;
+    box-shadow: 0 .2em gray; 
+    cursor: pointer;
+
+}
+.video-game-button:active, .start-btn:active {
+	box-shadow: none;
+	position: relative;
+	top: .2em;
+}
