@@ -61,6 +61,9 @@ function startSnakeGame(){
   startGameClient.callService(request);
 }
 
+
+var angularvel=0.0
+
 // Publishing the /turtle1/cmd_vel Topic
 // ------------------
 function moveForwards(){
@@ -79,96 +82,37 @@ function moveForwards(){
     angular : {
       x : 0.0,
       y : 0.0,
-      z : 0.0
-    }
-  });
-  if (!controlsDisabled) cmdVel.publish(twist);
-}
-
-function moveBackwards(){
-  var cmdVel = new ROSLIB.Topic({
-    ros : ros,
-    name : 'turtle1/cmd_vel',
-    messageType : 'geometry_msgs/Twist'
-  });
-
-  var twist = new ROSLIB.Message({
-    linear : {
-      x : -2.0,
-      y : 0.0,
-      z : 0.0
-    },
-    angular : {
-      x : 0.0,
-      y : 0.0,
-      z : 0.0
+      z : angularvel
     }
   });
   if (!controlsDisabled) cmdVel.publish(twist);
 }
 
 function turnLeft(){
-  var cmdVel = new ROSLIB.Topic({
-    ros : ros,
-    name : 'turtle1/cmd_vel',
-    messageType : 'geometry_msgs/Twist'
-  });
-
-  var twist = new ROSLIB.Message({
-    linear : {
-      x : 0.0,
-      y : 0.0,
-      z : 0.0
-    },
-    angular : {
-      x : 0.0,
-      y : 0.0,
-      z : 1.0
-    }
-  });
-  if (!controlsDisabled) cmdVel.publish(twist);
+  angularvel = 2.0;
 }
 
 function turnRight(){
-  var cmdVel = new ROSLIB.Topic({
-    ros : ros,
-    name : 'turtle1/cmd_vel',
-    messageType : 'geometry_msgs/Twist'
-  });
-
-  var twist = new ROSLIB.Message({
-    linear : {
-      x : 0.0,
-      y : 0.0,
-      z : 0.0
-    },
-    angular : {
-      x : 0.0,
-      y : 0.0,
-      z : -1.0
-    }
-  });
-  if (!controlsDisabled) cmdVel.publish(twist);
+  angularvel = -2.0;
 }
+
+function resetAngVel(){
+  angularvel = 0;
+}
+
+
 
 
 // Monitoring the arrow keys for turtle movement
 // --------------------------
-document.onkeydown = checkKey;
+document.onkeydown = checkKeyDown;
+document.onkeyup = checkKeyUp;
+var leftButton = document.getElementById("left_button")
+var rightButton = document.getElementById("right_button")
 
-function checkKey(e) {
-
+function checkKeyDown(e) {
     e = e || window.event;
-
-    if (e.keyCode == '38') {
-        // up arrow
-        moveForwards();
-    }
-    else if (e.keyCode == '40') {
-        // down arrow
-        moveBackwards();
-    }
-    else if (e.keyCode == '37') {
+    if (e.keyCode == '37') {
        // left arrow
        turnLeft();
     }
@@ -176,6 +120,23 @@ function checkKey(e) {
        // right arrow
        turnRight();
     }
-
 }
+
+function checkKeyUp(e) {
+    e = e || window.event;
+    if (e.keyCode == '37') {
+       // left arrow
+       leftButton.press();
+    }
+    else if (e.keyCode == '39') {
+       // right arrow
+       resetAngVel();
+    }
+}
+
+setInterval(function(){
+  moveForwards();
+}, 200);
+
+
 

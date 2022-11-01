@@ -18,20 +18,19 @@
 
   <div id="controller_div">
     <div id="arrow_buttons_div">
-      <div id="top_arrow_button_div">
-        <span class='video-game-button' onclick="moveForwards()">▲</span> 
-
+      <div id="left_arrow_button_div">
+        <button class="push--flat" id="left_button" onmousedown = "turnLeft()" onmouseup="resetAngVel()"></button>
+        <p class="button_text">L</p>
       </div>
-      <div id="mid_arrow_buttons_div">
-        <span class='video-game-button' onclick="turnLeft()">◀</span>
-        <span class='video-game-button' onclick="turnRight()">▶</span> 
-      </div>
-      <div id="bottom_arrow_button_div">
-        <span class='video-game-button' onclick="moveBackwards()">▼</span> 
-
+      <div id="right_arrow_button_div">
+        <button class="push--flat" id="right_button"onmousedown = "turnRight()" onmouseup="resetAngVel()"></button>
+        <p class="button_text">R</p>
       </div>
     </div>
-    <span class='start-btn' onclick="startSnakeGame()">START</span>
+    <div id="start_button_div">
+        <button class="blue--flat" id="start_button" onclick="startSnakeGame()""></button>
+        <p class="button_text">START</p>
+    </div>
   </div>
 </body>
 </html>

@@ -10,6 +10,11 @@ import turtlesim.srv
 from std_srvs.srv import Empty
 from learning_tf.srv import turtle_snake
 
+def telep_main_turtle():
+    rospy.wait_for_service('/turtle1/teleport_absolute')
+    telep = rospy.ServiceProxy('/turtle1/teleport_absolute', turtlesim.srv.TeleportAbsolute)
+    telep(5.5,5.5,round(random.uniform(-3.1,3.1),1))
+
 def disable_pen(turtle):
     r=0
     g=0
@@ -17,10 +22,10 @@ def disable_pen(turtle):
     width=0
     off=1
     rospy.wait_for_service('/%s/set_pen' % turtle)
-    setpen = rospy.ServiceProxy('/%s/set_pen' % turtle, turtlesim.srv.SetPen)
-    setpen(r,g,b,width,off)
+    setPen = rospy.ServiceProxy('/%s/set_pen' % turtle, turtlesim.srv.SetPen)
+    setPen(r,g,b,width,off)
 
-def changeBgColor():
+def change_bg_color():
     rospy.wait_for_service('/clear')
     rospy.set_param('/sim/background_r', random.randrange(0,255))
     rospy.set_param('/sim/background_g', random.randrange(0,255))
@@ -30,18 +35,22 @@ def changeBgColor():
 
 def handle_turtlesim_snake(req):
 
+    telep_main_turtle()
+
     x = round(random.uniform(0.5,10.5),1)
     y = round(random.uniform(0.5,10.5),1)
-    theta = 0
+    theta = round(random.uniform(-3.1,3.1),1)
     turtlename = "turtle2"
     turtletarget = "turtle1"
 
     rospy.wait_for_service('spawn_snake_turtle')
     spawnSnakeTurtle = rospy.ServiceProxy('spawn_snake_turtle', turtle_snake)
     spawnSnakeTurtle(x, y, theta, turtlename, turtletarget)
+
     disable_pen(turtletarget)
     disable_pen(turtlename)
-    changeBgColor()
+    change_bg_color()
+
 
 if __name__ == '__main__':
     rospy.init_node("start_turtlesim_snake_server")

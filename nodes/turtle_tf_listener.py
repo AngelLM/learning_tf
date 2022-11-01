@@ -31,7 +31,7 @@ def spawnNewTurtle(i):
 
     x = round(random.uniform(0.5,10.5),1)
     y = round(random.uniform(0.5,10.5),1)
-    theta = 0
+    theta = round(random.uniform(-3.1,3.1),1)
     turtlename = "turtle%s" % str(i+1)
     turtletarget = "turtle%s" % str(i)
 
@@ -67,11 +67,12 @@ if __name__ == '__main__':
     spawner(posx, posy, theta, turtlename)
 
     turtle_vel = rospy.Publisher('%s/cmd_vel' %turtlename, geometry_msgs.msg.Twist,queue_size=10)
-    turtle_collision = rospy.Publisher('/collision', Bool, queue_size=1)
+    #turtle_collision = rospy.Publisher('/collision', Bool, queue_size=1)
 
     rate = rospy.Rate(10.0)
 
     following = False   # Variable to control if the turtle has been already caught or not
+    firstCollision = True # Variable to control if is the first time this turtle has collide with the turtle1
     cancollide = False  # Variable that prevents the collision when the turtle is just caught.
 
     publishLevel(int(turtletarget[6:]))
@@ -89,7 +90,8 @@ if __name__ == '__main__':
             following = True
             changeBgColor()
             spawnNewTurtle(int(turtlename[6:]))
-        if cancollide and distance < 0.5:
+        if firstCollision and cancollide and distance < 0.5:
+            firstCollision = False
             pubKill.publish(True)
 
         if following:
