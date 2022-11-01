@@ -77,18 +77,10 @@ if __name__ == '__main__':
     publishLevel(int(turtletarget[6:]))
 
     while not rospy.is_shutdown():
-        
         try:
-            now = rospy.Time.now() 
-            past = now #- rospy.Duration(0)
-            listener.waitForTransformFull("/%s" %turtlename, now,
-                                    "/turtle1", past,
-                                    "/world", rospy.Duration(1.0))
-            (trans,rot) = listener.lookupTransformFull("/%s" % turtlename, now,
-                                                    "/turtle1", past,
-                                                    "/world")
-        except (tf.Exception, tf.LookupException, tf.ConnectivityException):
-            continue
+               (trans,rot) = listener.lookupTransform("/%s" %turtlename, '/turtle1', rospy.Time(0))
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+           continue
 
         distance = math.sqrt(trans[0] ** 2 + trans[1] ** 2)
         
@@ -102,16 +94,9 @@ if __name__ == '__main__':
 
         if following:
             try:
-                now = rospy.Time.now() 
-                past = now #- rospy.Duration(0)
-                listener.waitForTransformFull("/%s" %turtlename, now,
-                                        "/%s" % turtletarget, past,
-                                        "/world", rospy.Duration(1.0))
-                (trans,rot) = listener.lookupTransformFull("/%s" % turtlename, now,
-                                                        "/%s" % turtletarget, past,
-                                                        "/world")
-            except (tf.Exception, tf.LookupException, tf.ConnectivityException):
-                continue
+               (trans,rot) = listener.lookupTransform("/%s" %turtlename, "/%s" % turtletarget, rospy.Time(0))
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+               continue
 
             angular = 4 * math.atan2(trans[1], trans[0])
             linear = 2 #0.5 * math.sqrt(trans[0] ** 2 + trans[1] ** 2)
