@@ -29,14 +29,19 @@ var listener = new ROSLIB.Topic({
 });
 
 listener.subscribe(function(message) {
-  if(message.data=="GAME OVER")
-    controlsDisabled=true;
-  else
-    controlsDisabled=false;
-
-  document.getElementById("level").innerHTML = message.data;
-  /*document.getElementById("level").style.animation-play-state = "paused";
-  document.getElementById("level").style.opacity = "1";*/
+  if (message.data=="PRESS START"){
+    document.getElementById("start").innerHTML = message.data;
+    document.getElementById("level").style.display="none"
+    document.getElementById("start").style.display="block";
+  }
+  else{
+    if(message.data=="GAME OVER") controlsDisabled=true;
+    else controlsDisabled=false;
+    document.getElementById("level").innerHTML = message.data;
+    document.getElementById("start").style.display="none"
+    document.getElementById("level").style.display="block";
+  }
+  
   console.log('Received message on ' + listener.name + ': ' + message.data);
 });
 

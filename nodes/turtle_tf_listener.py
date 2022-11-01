@@ -49,30 +49,9 @@ def spawnNewTurtle(i):
     off=1
     setpen(r,g,b,width,off)
 
-def turtleCollision():
-    pub.publish("GAME OVER")
-
-    rospy.wait_for_service('/clear')
-    rospy.set_param('/sim/background_r', 0)
-    rospy.set_param('/sim/background_g', 0)
-    rospy.set_param('/sim/background_b', 0)
-    clearSrv = rospy.ServiceProxy('/clear', Empty)
-    resp = clearSrv()
-
-    # Killing all the extra listener and broadcaster nodes
-    for node in rosnode.get_node_names():
-        if "turtle_tf_" in node:
-            os.system("rosnode kill '%s'" % node)
-
-    # Killing all the extra turtle services
-    for service in rosservice.get_service_list():
-        if "/set_pen" in service:                # looking for a service of a turtle, to only get 1 line per turtle in the
-            if service[1:-8] != 'turtle1':
-                os.system("rosservice call /kill '%s'" % service[1:-8])
-
-
 if __name__ == '__main__':
     pub = rospy.Publisher('/currentGameLevel', String, queue_size=10)
+    pubKill = rospy.Publisher('/killTurtles', Bool, queue_size=10)
     rospy.init_node('turtle_tf_listener', anonymous=True)
 
     posx = rospy.get_param('~posx')
@@ -119,7 +98,7 @@ if __name__ == '__main__':
             changeBgColor()
             spawnNewTurtle(int(turtlename[6:]))
         if cancollide and distance < 0.5:
-            turtleCollision()
+            pubKill.publish(True)
 
         if following:
             try:

@@ -20,6 +20,13 @@ def disable_pen(turtle):
     setpen = rospy.ServiceProxy('/%s/set_pen' % turtle, turtlesim.srv.SetPen)
     setpen(r,g,b,width,off)
 
+def changeBgColor():
+    rospy.wait_for_service('/clear')
+    rospy.set_param('/sim/background_r', random.randrange(0,255))
+    rospy.set_param('/sim/background_g', random.randrange(0,255))
+    rospy.set_param('/sim/background_b', random.randrange(0,255))
+    clearSrv = rospy.ServiceProxy('/clear', Empty)
+    resp = clearSrv()
 
 def handle_turtlesim_snake(req):
 
@@ -34,6 +41,8 @@ def handle_turtlesim_snake(req):
     spawnSnakeTurtle(x, y, theta, turtlename, turtletarget)
     disable_pen(turtletarget)
     disable_pen(turtlename)
+    changeBgColor()
+
 if __name__ == '__main__':
     rospy.init_node("start_turtlesim_snake_server")
     rospy.loginfo("Turtlesim Snake server node created")

@@ -22,7 +22,8 @@ h2{
 	font-size: 0.5em;
 }
 
-p{
+#start{
+	display: block;
 	margin-top: 3em;
 	color: white;
 	text-align: center;
@@ -35,6 +36,14 @@ p{
 	0%{opacity: 1;}
 	50%{opacity: 0.5;}
 	100%{opacity: 1;}
+}
+
+#level{
+	display: none;
+	margin-top: 3em;
+	color: yellow;
+	text-align: center;
+	font-size: 1em;
 }
 
 #controller_div{

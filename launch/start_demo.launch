@@ -14,4 +14,5 @@
 
   <node pkg="learning_tf" type="start_turtlesim_snake.py" name="start_turtlesim_snake" />
   <node pkg="learning_tf" type="spawn_snake_turtle.py" name="spawn_snake_turtle" />
+  <node pkg="learning_tf" type="turtle_killer.py" name="turtle_killer" />
 </launch>
